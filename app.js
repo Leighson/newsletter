@@ -1,11 +1,15 @@
-const port = process.env.PORT || 3000;
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const request = require("request");
 const https = require("https");
 
 const app = express();
+
+require("dotenv").config();
+console.log(process.env)
+
+const port = process.env.PORT || 3000;
+const key = process.env.MAILCHIMP_API;
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -36,7 +40,6 @@ app.post("/", function(req, res) {
         }]
     }
 
-
     const jsonData = JSON.stringify(data);
 
     // define server and authentication information
@@ -48,15 +51,17 @@ app.post("/", function(req, res) {
 
     const options = {
         method: "POST",
-        auth: "lee1:c16c4f26af083410f397c20e659341e5-us10"
+        auth: key
     }
 
     // create object that opens API request and responds accordingly
     const request = https.request(url, options, function(response) {
 
         if (response.statusCode === 200) {
+            console.log(response.statusCode);
             res.sendFile(__dirname + "/success.html");
         } else {
+            console.log(response.statusCode);
             res.sendFile(__dirname + "/failure.html");
         }
 
