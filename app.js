@@ -10,6 +10,8 @@ console.log(process.env)
 
 const port = process.env.PORT;
 const key = process.env.MAILCHIMP_API;
+const dataCentre = process.env.DC;
+const listID = process.env.LIST_ID;
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -43,8 +45,7 @@ app.post("/", function(req, res) {
     const jsonData = JSON.stringify(data);
 
     // define server and authentication information
-    const dataCentre = "us10";
-    const listID = "93d2db359f";
+
     const endpoint = `lists/${listID}`;
 
     const url = `https://${dataCentre}.api.mailchimp.com/3.0/${endpoint}`;
@@ -58,10 +59,8 @@ app.post("/", function(req, res) {
     const request = https.request(url, options, function(response) {
 
         if (response.statusCode === 200) {
-            console.log(response.statusCode);
             res.sendFile(__dirname + "/success.html");
         } else {
-            console.log(response.statusCode);
             res.sendFile(__dirname + "/failure.html");
         }
 
